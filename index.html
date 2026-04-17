@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScribbleTalk</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FFF8F4">
+<script src="https://unpkg.com/dexie@3.2.4/dist/dexie.js"></script>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <div class="land-hero">
+    <div class="logo-mark"><span class="logo-squiggle">✏️</span></div>
+    <div class="brand-name">ScribbleTalk</div>
+    <p class="brand-tag">Every mark is a message. Help your child find their voice through drawing, scribbling, and writing — at their own pace.</p>
+    <div class="hero-scribbles">
+      <div class="hero-scribble"><span>✋</span> Ages 3–9</div>
+      <div class="hero-scribble"><span>🔒</span> Ad-free & safe</div>
+      <div class="hero-scribble"><span>💬</span> Speech-friendly</div>
+      <div class="hero-scribble"><span>🎨</span> Starts with scribbling</div>
+    </div>
+    <button class="cta-btn" onclick="go('onboard')">Get Started — It's Free</button>
+  </div>
+  <div class="land-trust">
+    <div class="trust-item"><div class="trust-dot" style="background:var(--sage3)"></div>No open internet</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--sky3)"></div>Parent controls built-in</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--lavender3)"></div>Progress tracking</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--sun3)"></div>SLP-informed design</div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboard" class="screen">
+  <div style="padding:1.5rem 1.5rem .5rem;display:flex;align-items:center;gap:1rem">
+    <button class="back-btn" onclick="go('landing')">←</button>
+    <div class="ob-step">Step 1 of 3 — About you</div>
+  </div>
+  <div style="flex:1;padding:1rem 1.5rem 2rem;overflow-y:auto">
+    <div class="ob-header">
+      <div class="ob-title">Let's set things up 🌱</div>
+      <div class="ob-sub">This takes 2 minutes. Everything stays private on your device.</div>
+    </div>
+    <div class="ob-form">
+      <div class="field-group">
+        <div class="field-label">Your name (parent or caregiver)</div>
+        <input class="field-input" id="parentName" type="text" placeholder="e.g. Amina" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">Your child's name</div>
+        <input class="field-input" id="childName" type="text" placeholder="e.g. Temi" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">Child's age</div>
+        <div class="age-chips" id="ageChips">
+          <div class="age-chip" onclick="selAge(this,'3')">3</div>
+          <div class="age-chip" onclick="selAge(this,'4')">4</div>
+          <div class="age-chip" onclick="selAge(this,'5')">5</div>
+          <div class="age-chip" onclick="selAge(this,'6')">6</div>
+          <div class="age-chip" onclick="selAge(this,'7')">7</div>
+          <div class="age-chip" onclick="selAge(this,'8')">8</div>
+          <div class="age-chip" onclick="selAge(this,'9+')">9+</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What are your goals? (pick any)</div>
+        <div class="goals-grid">
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">🖊️</div>
+            <div class="goal-name">Scribbling & marks</div>
+          </div>
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">🔤</div>
+            <div class="goal-name">Letter tracing</div>
+          </div>
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">🔊</div>
+            <div class="goal-name">Sound-letter links</div>
+          </div>
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">💬</div>
+            <div class="goal-name">Expressive writing</div>
+          </div>
+        </div>
+      </div>
+      <button class="ob-next" onclick="finishOnboard()">Continue →</button>
+      <button class="ob-back" onclick="go('landing')">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHILD HOME -->
+<div id="child-home" class="screen">
+  <button class="parent-corner" onclick="go('dashboard')">👩 Parent</button>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:2rem;overflow-y:auto">
+    <div class="child-greeting">
+      <div class="child-name-big" id="childNameDisplay">Hello, Temi! 👋</div>
+      <div class="child-sub">What shall we make today?</div>
+    </div>
+    <div class="child-activities">
+      <div class="activity-card scribble" onclick="go('scribble')">
+        <div class="act-icon">🎨</div>
+        <div class="act-text">
+          <div class="act-title">Free Scribble</div>
+          <div class="act-desc">Draw and make any marks you like!</div>
+        </div>
+      </div>
+      <div class="activity-card trace" onclick="go('tracing', 'letters')">
+        <div class="act-icon">📝</div>
+        <div class="act-text">
+          <div class="act-title">Trace Letters</div>
+          <div class="act-desc">Follow dotted lines for A to Z</div>
+        </div>
+      </div>
+      <div class="activity-card numbers" onclick="go('tracing', 'numbers')">
+        <div class="act-icon">🔢</div>
+        <div class="act-text">
+          <div class="act-title">Trace Numbers</div>
+          <div class="act-desc">Follow dotted lines for 0 to 9</div>
+        </div>
+      </div>
+      <div class="activity-card words" onclick="alert('Build-a-Word coming in Phase 2! 🌱')">
+        <div class="act-icon">🔤</div>
+        <div class="act-text">
+          <div class="act-title">Build a Word</div>
+          <div class="act-desc">Drag and drop letters</div>
+        </div>
+      </div>
+      <div class="activity-card draw" onclick="alert('Draw & Tell coming in Phase 2! 🌟')">
+        <div class="act-icon">📖</div>
+        <div class="act-text">
+          <div class="act-title">Draw & Tell</div>
+          <div class="act-desc">Draw a story, then tell it</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIBBLE CANVAS -->
+<div id="scribble" class="screen">
+  <div class="canvas-header">
+    <button class="back-btn" onpointerdown="startParentGate(event, 'child-home')" onpointerup="endParentGate(event)" onpointercancel="endParentGate(event)" onpointerleave="endParentGate(event)" oncontextmenu="event.preventDefault()">←</button>
+    <div class="canvas-title">🎨 Free Scribble</div>
+    <div style="font-size:.85rem;font-weight:700;color:var(--ink3)" id="strokeCount">0 marks made</div>
+  </div>
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="drawCanvas"></canvas>
+    <div class="size-panel">
+      <button class="size-btn active" onclick="setSize(6,this)">S</button>
+      <button class="size-btn" onclick="setSize(14,this)">M</button>
+      <button class="size-btn" onclick="setSize(26,this)">L</button>
+      <button class="size-btn" onclick="setSize(44,this)">XL</button>
+    </div>
+    <div class="tools-panel">
+      <button class="tool-btn active" id="drawTool" onclick="setTool('draw',this)" title="Draw">✏️</button>
+      <button class="tool-btn" id="eraseTool" onclick="setTool('erase',this)" title="Erase">🧹</button>
+      <button class="tool-btn" onclick="clearCanvas()" title="Clear all">🗑️</button>
+      <button class="tool-btn" onclick="celebrateScribble('scribble')" title="Done!">⭐</button>
+    </div>
+    <div class="color-panel">
+      <div class="color-dot active" style="background:#E24B4A" onclick="setColor('#E24B4A',this)"></div>
+      <div class="color-dot" style="background:#F5A623" onclick="setColor('#F5A623',this)"></div>
+      <div class="color-dot" style="background:#F5C842" onclick="setColor('#F5C842',this)"></div>
+      <div class="color-dot" style="background:#7CC494" onclick="setColor('#7CC494',this)"></div>
+      <div class="color-dot" style="background:#6AAAEE" onclick="setColor('#6AAAEE',this)"></div>
+      <div class="color-dot" style="background:#9B87F0" onclick="setColor('#9B87F0',this)"></div>
+      <div class="color-dot" style="background:#D4537E" onclick="setColor('#D4537E',this)"></div>
+      <div class="color-dot" style="background:#2D2320" onclick="setColor('#2D2320',this)"></div>
+    </div>
+    <div class="celebrate-msg" id="celebrateMsg">
+      <div class="celebrate-emoji">🌟</div>
+      <div class="celebrate-text">Amazing work!</div>
+      <div class="celebrate-sub">You made <span id="celebrateStrokes">lots of</span> marks today</div>
+      <button class="celebrate-close" onclick="closeCelebrate()">Keep going 🎨</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACING -->
+<div id="tracing" class="screen">
+  <div class="trace-header">
+    <button class="back-btn" onpointerdown="startParentGate(event, 'child-home')" onpointerup="endParentGate(event)" onpointercancel="endParentGate(event)" onpointerleave="endParentGate(event)" oncontextmenu="event.preventDefault()">←</button>
+    <h1 class="header-title"><span class="header-icon">🖍️</span> Trace & Learn</h1>
+    <button class="sound-btn" onclick="playLetterSound()" title="Hear Sound">🔊</button>
+  </div>
+  <div class="letter-picker" id="letterPicker"></div>
+  <div class="trace-area">
+    <div class="trace-instructions">
+      <div class="trace-instr-text" id="traceInstr">Follow the dotted lines with your finger or mouse ✨</div>
+    </div>
+    <div class="trace-canvas-wrap">
+      <canvas id="traceCanvas" width="360" height="280"></canvas>
+      <div id="starReward" class="star-reward">
+        <div class="stars-wrap" id="starsWrap"></div>
+        <div class="star-reward-text" id="starRewardMsg">Amazing!</div>
+      </div>
+    </div>
+    <div class="trace-actions">
+      <button class="trace-action-btn ta-clear" onclick="clearTrace()">Try again 🔄</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARENT DASHBOARD -->
+<div id="dashboard" class="screen">
+  <div class="dash-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="dash-title">Parent Dashboard</div>
+        <div class="dash-sub" id="dashChildName">Temi's progress</div>
+      </div>
+      <button onclick="go('child-home')" style="background:rgba(255,255,255,0.2);border:none;border-radius:50px;padding:.4rem 1rem;font-size:.85rem;font-weight:700;color:white;cursor:pointer;font-family:'Nunito',sans-serif">← Child view</button>
+    </div>
+  </div>
+  <div style="display:flex;overflow-x:auto;background:white;border-bottom:2px solid #EDE8E4">
+    <button class="nav-tab active" onclick="switchDashTab(this,'tab-overview')">Overview</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-progress')">Progress</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-activity')">Activity Log</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-settings')">Controls</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-tips')">Tips</button>
+  </div>
+  <div class="dash-body">
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <div class="dash-section">
+        <div class="dash-section-title">📊 This week</div>
+        <div class="metrics-row">
+          <div class="metric-card"><div class="metric-num" id="metricSessions">0</div><div class="metric-label">Sessions</div></div>
+          <div class="metric-card"><div class="metric-num" id="metricTime">0m</div><div class="metric-label">Total time</div></div>
+          <div class="metric-card" style="background:var(--sage)"><div class="metric-num" style="color:var(--sage3)" id="metricStars">🌟 0</div><div class="metric-label">Stars earned</div></div>
+        </div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-section-title">🗓️ Today's suggestion</div>
+        <div class="tip-card">
+          <div class="tip-icon">✨</div>
+          <div class="tip-text">Try the Tracing module today — your child is ready to engage with guided patterns!</div>
+        </div>
+      </div>
+    </div>
+    <!-- PROGRESS TAB -->
+    <div id="tab-progress" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">📈 Development stages</div>
+        <div class="progress-bars">
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">🎨 Free scribbling</span><span class="prog-pct" id="progScribblePct">0%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" id="progScribbleBar" style="width:0%;background:linear-gradient(90deg,#FFBB99,#F5A623)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">🔤 Letter tracing</span><span class="prog-pct" id="progTracePct">0%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" id="progTraceBar" style="width:0%;background:linear-gradient(90deg,#CEC4F8,#9B87F0)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ACTIVITY LOG -->
+    <div id="tab-activity" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">📋 Recent sessions</div>
+        <div class="activity-list" id="activityList">
+          <div style="font-size:0.9rem; color:var(--ink2)">No activities yet. Play to see results!</div>
+        </div>
+      </div>
+    </div>
+    <!-- SETTINGS / CONTROLS -->
+    <div id="tab-settings" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">🔒 Safety controls</div>
+        <div class="settings-list">
+          <div class="setting-row"><span class="setting-name">No open internet</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">Sound effects</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- TIPS -->
+    <div id="tab-tips" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">💡 Offline reinforcement tips</div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div class="tip-card"><div class="tip-icon">🖊️</div><div class="tip-text">Give large crayons and big paper. Encourage scribbling without correction — every mark is a word.</div></div>
+          <div class="tip-card" style="background:linear-gradient(135deg,var(--sky),var(--sky2))"><div class="tip-icon">🔊</div><div class="tip-text">Say the letter sound while your child traces it. "Ssss like snake" is more memorable than the letter name alone.</div></div>
+          <div class="tip-card" style="background:linear-gradient(135deg,var(--sage),var(--sage2))"><div class="tip-icon">📸</div><div class="tip-text">Photograph your child's scribbles and ask "tell me about this." Their explanation is expressive language — celebrate it.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/parent.js"></script>
+<script src="js/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('SW registration failed:', err));
+    });
+  }
+</script>
+</body>
+</html>

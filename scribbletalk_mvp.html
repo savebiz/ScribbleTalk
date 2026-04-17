@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScribbleTalk</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --peach:#FFF0E8;--peach2:#FFD9C2;--peach3:#FFBB99;
+    --sage:#E8F4EC;--sage2:#B8DFC4;--sage3:#7CC494;
+    --sky:#E8F2FF;--sky2:#B8D4F8;--sky3:#6AAAEE;
+    --lavender:#F0EEFF;--lavender2:#CEC4F8;--lavender3:#9B87F0;
+    --sun:#FFF8E0;--sun2:#FFE89A;--sun3:#F5C842;
+    --ink:#2D2320;--ink2:#5C4E4A;--ink3:#8C7E7A;
+    --white:#FFFFFF;--radius:20px;--radius-lg:28px;
+  }
+  body{font-family:'Nunito',sans-serif;background:#FAF7F4;color:var(--ink);min-height:100vh;overflow-x:hidden}
+  .screen{display:none;min-height:100vh;animation:fadeIn 0.4s ease}
+  .screen.active{display:flex;flex-direction:column}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ---- LANDING ---- */
+  #landing{background:linear-gradient(160deg,#FFF8F4 0%,#F0EEFF 60%,#E8F4EC 100%);padding:0;overflow:hidden}
+  .land-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem 2rem;text-align:center;flex:1}
+  .logo-mark{width:90px;height:90px;background:linear-gradient(135deg,var(--lavender3),var(--sage3));border-radius:30px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 8px 32px rgba(155,135,240,0.25);position:relative}
+  .logo-squiggle{font-size:44px;line-height:1}
+  .brand-name{font-family:'Fredoka One',cursive;font-size:3rem;letter-spacing:-1px;background:linear-gradient(135deg,var(--lavender3),var(--sage3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+  .brand-tag{font-size:1.15rem;color:var(--ink2);font-weight:600;margin-bottom:2.5rem;line-height:1.5;max-width:340px}
+  .hero-scribbles{display:flex;gap:1rem;margin-bottom:2.5rem;flex-wrap:wrap;justify-content:center}
+  .hero-scribble{background:var(--white);border-radius:var(--radius);padding:.75rem 1.2rem;font-size:.9rem;font-weight:700;color:var(--ink2);box-shadow:0 2px 12px rgba(0,0,0,0.07);display:flex;align-items:center;gap:.4rem}
+  .cta-btn{background:linear-gradient(135deg,var(--lavender3),#7B6DE8);color:white;border:none;padding:1.1rem 2.8rem;border-radius:50px;font-size:1.2rem;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:0 6px 24px rgba(155,135,240,0.4);transition:all 0.2s;letter-spacing:-.3px}
+  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(155,135,240,0.5)}
+  .cta-btn:active{transform:scale(0.97)}
+  .land-trust{display:flex;gap:2rem;justify-content:center;padding:1.5rem 2rem 2.5rem;flex-wrap:wrap}
+  .trust-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:700;color:var(--ink3)}
+  .trust-dot{width:8px;height:8px;border-radius:50%}
+
+  /* ---- ONBOARDING ---- */
+  #onboard{background:var(--white);padding:2rem}
+  .ob-header{text-align:center;margin-bottom:2rem}
+  .ob-step{font-size:.85rem;font-weight:700;color:var(--lavender3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+  .ob-title{font-size:1.75rem;font-weight:800;color:var(--ink);margin-bottom:.5rem}
+  .ob-sub{font-size:1rem;color:var(--ink2);line-height:1.6}
+  .ob-form{max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:1rem}
+  .field-label{font-size:.9rem;font-weight:700;color:var(--ink2);margin-bottom:.3rem}
+  .field-input{width:100%;padding:.85rem 1.1rem;border:2px solid #EDE8E4;border-radius:14px;font-size:1rem;font-family:'Nunito',sans-serif;color:var(--ink);background:var(--white);transition:border-color 0.2s;outline:none}
+  .field-input:focus{border-color:var(--lavender3)}
+  .field-group{display:flex;flex-direction:column}
+  .age-chips{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem}
+  .age-chip{padding:.5rem 1.2rem;border-radius:50px;border:2px solid #EDE8E4;font-size:.9rem;font-weight:700;cursor:pointer;transition:all 0.15s;background:var(--white);color:var(--ink2)}
+  .age-chip.sel{background:var(--lavender3);border-color:var(--lavender3);color:white}
+  .ob-next{width:100%;padding:1rem;background:linear-gradient(135deg,var(--lavender3),#7B6DE8);color:white;border:none;border-radius:14px;font-size:1.1rem;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;margin-top:.5rem;transition:all 0.2s}
+  .ob-next:hover{transform:translateY(-1px)}
+  .ob-back{background:none;border:none;color:var(--ink3);font-size:.9rem;font-weight:600;font-family:'Nunito',sans-serif;cursor:pointer;padding:.5rem;margin-top:.5rem}
+  .goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.5rem}
+  .goal-card{padding:.85rem;border:2px solid #EDE8E4;border-radius:14px;cursor:pointer;transition:all 0.15s;text-align:left}
+  .goal-card.sel{border-color:var(--sage3);background:var(--sage)}
+  .goal-card .goal-icon{font-size:1.4rem;margin-bottom:.3rem}
+  .goal-card .goal-name{font-size:.9rem;font-weight:700;color:var(--ink)}
+
+  /* ---- CHILD HOME ---- */
+  #child-home{background:linear-gradient(180deg,#FFF8F4 0%,#F4F0FF 100%);padding:1.5rem}
+  .child-greeting{text-align:center;margin-bottom:2rem}
+  .child-name-big{font-family:'Fredoka One',cursive;font-size:2.5rem;color:var(--ink);margin-bottom:.25rem}
+  .child-sub{font-size:1rem;color:var(--ink2);font-weight:600}
+  .child-activities{display:flex;flex-direction:column;gap:1rem;max-width:480px;margin:0 auto}
+  .activity-card{border-radius:var(--radius-lg);padding:1.4rem 1.5rem;display:flex;align-items:center;gap:1.2rem;cursor:pointer;transition:all 0.2s;border:3px solid transparent;position:relative;overflow:hidden}
+  .activity-card:hover{transform:scale(1.02);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+  .activity-card:active{transform:scale(0.98)}
+  .activity-card.scribble{background:linear-gradient(135deg,#FFF0E8,#FFD9C2);border-color:var(--peach3)}
+  .activity-card.trace{background:linear-gradient(135deg,#E8F2FF,#B8D4F8);border-color:var(--sky3)}
+  .activity-card.words{background:linear-gradient(135deg,#E8F4EC,#B8DFC4);border-color:var(--sage3)}
+  .activity-card.draw{background:linear-gradient(135deg,#F0EEFF,#CEC4F8);border-color:var(--lavender3)}
+  .act-icon{width:60px;height:60px;border-radius:18px;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+  .act-text .act-title{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--ink);margin-bottom:.1rem}
+  .act-text .act-desc{font-size:.85rem;color:var(--ink2);font-weight:600}
+  .parent-corner{position:fixed;top:1rem;right:1rem;background:rgba(255,255,255,0.9);border:2px solid #EDE8E4;border-radius:50px;padding:.4rem 1rem;font-size:.8rem;font-weight:700;color:var(--ink2);cursor:pointer;z-index:100;backdrop-filter:blur(8px)}
+
+  /* ---- SCRIBBLE CANVAS ---- */
+  #scribble{background:#FAFAF8;padding:0;position:relative}
+  .canvas-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:white;border-bottom:2px solid #F0EDE8}
+  .back-btn{width:44px;height:44px;border-radius:14px;border:2px solid #EDE8E4;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;transition:background 0.15s}
+  .back-btn:hover{background:#F5F0EC}
+  .canvas-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--ink);flex:1}
+  .canvas-wrap{flex:1;position:relative;overflow:hidden}
+  canvas#drawCanvas{width:100%;height:100%;touch-action:none;cursor:crosshair;display:block}
+  .tools-panel{display:flex;flex-direction:column;position:absolute;right:1rem;top:1rem;gap:.6rem;background:white;border-radius:20px;padding:.75rem .6rem;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+  .tool-btn{width:44px;height:44px;border-radius:12px;border:2px solid #EDE8E4;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:all 0.15s}
+  .tool-btn:hover,.tool-btn.active{background:var(--lavender);border-color:var(--lavender3)}
+  .color-panel{display:flex;position:absolute;left:1rem;bottom:1rem;gap:.6rem;background:white;border-radius:50px;padding:.65rem .75rem;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+  .color-dot{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.15s;flex-shrink:0}
+  .color-dot.active,.color-dot:hover{transform:scale(1.2);border-color:var(--ink)}
+  .size-panel{position:absolute;left:1rem;top:1rem;display:flex;gap:.5rem;background:white;border-radius:50px;padding:.5rem .75rem;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+  .size-btn{border:2px solid #EDE8E4;background:white;border-radius:50px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;padding:.3rem .7rem;font-size:.8rem;font-weight:700;color:var(--ink2)}
+  .size-btn.active{background:var(--lavender);border-color:var(--lavender3);color:var(--ink)}
+  .celebrate-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:var(--radius-lg);padding:2rem 3rem;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.15);display:none;z-index:10;animation:popIn 0.4s ease}
+  @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(0.8)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  .celebrate-emoji{font-size:3rem;margin-bottom:.5rem}
+  .celebrate-text{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--ink)}
+  .celebrate-sub{font-size:.9rem;color:var(--ink2);font-weight:600;margin-top:.3rem}
+  .celebrate-close{margin-top:1rem;padding:.6rem 1.5rem;background:linear-gradient(135deg,var(--lavender3),#7B6DE8);color:white;border:none;border-radius:50px;font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer}
+
+  /* ---- TRACING ---- */
+  #tracing{background:#F4F9FF;padding:0}
+  .trace-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:white;border-bottom:2px solid #E8F0F8}
+  .letter-picker{display:flex;gap:.6rem;padding:.75rem 1.5rem;overflow-x:auto;background:white;border-bottom:2px solid #E8F0F8}
+  .letter-chip{width:52px;height:52px;border-radius:14px;border:2px solid #D8E8F4;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--ink2);flex-shrink:0;transition:all 0.15s}
+  .letter-chip.active{background:var(--sky2);border-color:var(--sky3);color:var(--ink)}
+  .trace-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;gap:1.5rem}
+  .trace-instructions{text-align:center;background:white;border-radius:var(--radius);padding:1rem 1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);max-width:360px;width:100%}
+  .trace-instr-text{font-size:1rem;font-weight:700;color:var(--ink2)}
+  .trace-canvas-wrap{background:white;border-radius:var(--radius-lg);padding:1rem;box-shadow:0 4px 24px rgba(0,0,0,0.08);position:relative;width:100%;max-width:400px}
+  canvas#traceCanvas{display:block;width:100%;border-radius:12px}
+  .trace-actions{display:flex;gap:1rem;justify-content:center}
+  .trace-action-btn{padding:.75rem 1.75rem;border-radius:50px;border:none;font-size:1rem;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all 0.2s}
+  .ta-clear{background:#F0EDE8;color:var(--ink2)}
+  .ta-next{background:linear-gradient(135deg,var(--sky3),#4E8ED4);color:white;box-shadow:0 4px 16px rgba(110,170,238,0.4)}
+  .sound-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--sun2),var(--sun3));border:none;cursor:pointer;font-size:1.4rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(245,200,66,0.4);transition:all 0.2s;flex-shrink:0}
+  .sound-btn:active{transform:scale(0.9)}
+
+  /* ---- PARENT DASHBOARD ---- */
+  #dashboard{background:#F8F5FF;padding:0}
+  .dash-header{background:linear-gradient(135deg,var(--lavender3),#7B6DE8);padding:1.5rem;color:white}
+  .dash-title{font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:.25rem}
+  .dash-sub{font-size:.9rem;opacity:.85;font-weight:600}
+  .dash-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem;flex:1;overflow-y:auto}
+  .dash-section{background:white;border-radius:var(--radius-lg);padding:1.25rem;box-shadow:0 2px 12px rgba(155,135,240,0.08)}
+  .dash-section-title{font-size.9rem;font-weight:800;color:var(--ink);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+  .metrics-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+  .metric-card{background:var(--lavender);border-radius:14px;padding:.85rem;text-align:center}
+  .metric-num{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--lavender3)}
+  .metric-label{font-size:.75rem;font-weight:700;color:var(--ink2);margin-top:.1rem}
+  .progress-bars{display:flex;flex-direction:column;gap:.85rem}
+  .prog-item{display:flex;flex-direction:column;gap:.3rem}
+  .prog-top{display:flex;justify-content:space-between;align-items:center}
+  .prog-name{font-size:.9rem;font-weight:700;color:var(--ink)}
+  .prog-pct{font-size:.85rem;font-weight:700;color:var(--ink3)}
+  .prog-bar-bg{height:10px;background:#EDE8E4;border-radius:50px;overflow:hidden}
+  .prog-bar-fill{height:100%;border-radius:50px;transition:width 1s ease}
+  .activity-list{display:flex;flex-direction:column;gap:.75rem}
+  .act-log{display:flex;align-items:center;gap.75rem;padding:.75rem;background:#FAFAF8;border-radius:12px;gap:.75rem}
+  .act-log-icon{font-size:1.3rem;width:36px;text-align:center}
+  .act-log-text{flex:1}
+  .act-log-name{font-size:.9rem;font-weight:700;color:var(--ink)}
+  .act-log-time{font-size:.8rem;color:var(--ink3);font-weight:600}
+  .act-log-badge{font-size:.75rem;font-weight:700;padding:.2rem .7rem;border-radius:50px}
+  .badge-great{background:var(--sage);color:#0F6E56}
+  .badge-good{background:var(--sky);color:#185FA5}
+  .settings-list{display:flex;flex-direction:column;gap:.5rem}
+  .setting-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:#FAFAF8;border-radius:12px}
+  .setting-name{font-size:.9rem;font-weight:700;color:var(--ink)}
+  .toggle{width:48px;height:26px;background:#DDD;border-radius:50px;cursor:pointer;position:relative;transition:background 0.2s}
+  .toggle.on{background:var(--sage3)}
+  .toggle::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;background:white;border-radius:50%;transition:left 0.2s;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+  .toggle.on::after{left:25px}
+  .tip-card{background:linear-gradient(135deg,var(--sun),var(--sun2));border-radius:var(--radius);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start}
+  .tip-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem}
+  .tip-text{font-size:.9rem;font-weight:700;color:var(--ink2);line-height:1.5}
+  .nav-tabs{display:flex;gap:.5rem;padding:0 1.5rem;background:white;border-bottom:2px solid #EDE8E4;overflow-x:auto}
+  .nav-tab{padding:.75rem 1.25rem;font-size:.85rem;font-weight:700;color:var(--ink3);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all 0.15s;font-family:'Nunito',sans-serif;background:none;border-top:none;border-left:none;border-right:none}
+  .nav-tab.active{color:var(--lavender3);border-bottom-color:var(--lavender3)}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <div class="land-hero">
+    <div class="logo-mark"><span class="logo-squiggle">✏️</span></div>
+    <div class="brand-name">ScribbleTalk</div>
+    <p class="brand-tag">Every mark is a message. Help your child find their voice through drawing, scribbling, and writing — at their own pace.</p>
+    <div class="hero-scribbles">
+      <div class="hero-scribble"><span>✋</span> Ages 3–9</div>
+      <div class="hero-scribble"><span>🔒</span> Ad-free & safe</div>
+      <div class="hero-scribble"><span>💬</span> Speech-friendly</div>
+      <div class="hero-scribble"><span>🎨</span> Starts with scribbling</div>
+    </div>
+    <button class="cta-btn" onclick="go('onboard')">Get Started — It's Free</button>
+  </div>
+  <div class="land-trust">
+    <div class="trust-item"><div class="trust-dot" style="background:var(--sage3)"></div>No open internet</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--sky3)"></div>Parent controls built-in</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--lavender3)"></div>Progress tracking</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--sun3)"></div>SLP-informed design</div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboard" class="screen">
+  <div style="padding:1.5rem 1.5rem .5rem;display:flex;align-items:center;gap:1rem">
+    <button class="back-btn" onclick="go('landing')">←</button>
+    <div class="ob-step">Step 1 of 3 — About you</div>
+  </div>
+  <div style="flex:1;padding:1rem 1.5rem 2rem;overflow-y:auto">
+    <div class="ob-header">
+      <div class="ob-title">Let's set things up 🌱</div>
+      <div class="ob-sub">This takes 2 minutes. Everything stays private on your device.</div>
+    </div>
+    <div class="ob-form">
+      <div class="field-group">
+        <div class="field-label">Your name (parent or caregiver)</div>
+        <input class="field-input" id="parentName" type="text" placeholder="e.g. Amina" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">Your child's name</div>
+        <input class="field-input" id="childName" type="text" placeholder="e.g. Temi" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">Child's age</div>
+        <div class="age-chips" id="ageChips">
+          <div class="age-chip" onclick="selAge(this,'3')">3</div>
+          <div class="age-chip" onclick="selAge(this,'4')">4</div>
+          <div class="age-chip" onclick="selAge(this,'5')">5</div>
+          <div class="age-chip" onclick="selAge(this,'6')">6</div>
+          <div class="age-chip" onclick="selAge(this,'7')">7</div>
+          <div class="age-chip" onclick="selAge(this,'8')">8</div>
+          <div class="age-chip" onclick="selAge(this,'9+')">9+</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What are your goals? (pick any)</div>
+        <div class="goals-grid">
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">🖊️</div>
+            <div class="goal-name">Scribbling & marks</div>
+          </div>
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">🔤</div>
+            <div class="goal-name">Letter tracing</div>
+          </div>
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">🔊</div>
+            <div class="goal-name">Sound-letter links</div>
+          </div>
+          <div class="goal-card" onclick="toggleGoal(this)">
+            <div class="goal-icon">💬</div>
+            <div class="goal-name">Expressive writing</div>
+          </div>
+        </div>
+      </div>
+      <button class="ob-next" onclick="finishOnboard()">Continue →</button>
+      <button class="ob-back" onclick="go('landing')">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHILD HOME -->
+<div id="child-home" class="screen">
+  <button class="parent-corner" onclick="go('dashboard')">👩 Parent</button>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:2rem;overflow-y:auto">
+    <div class="child-greeting">
+      <div class="child-name-big" id="childNameDisplay">Hello, Temi! 👋</div>
+      <div class="child-sub">What shall we make today?</div>
+    </div>
+    <div class="child-activities">
+      <div class="activity-card scribble" onclick="go('scribble')">
+        <div class="act-icon">🎨</div>
+        <div class="act-text">
+          <div class="act-title">Free Scribble</div>
+          <div class="act-desc">Draw and make any marks you like!</div>
+        </div>
+      </div>
+      <div class="activity-card trace" onclick="go('tracing')">
+        <div class="act-icon">✏️</div>
+        <div class="act-text">
+          <div class="act-title">Trace Letters</div>
+          <div class="act-desc">Follow the dotted lines</div>
+        </div>
+      </div>
+      <div class="activity-card words" onclick="alert('Build-a-Word coming in Phase 2! 🌱')">
+        <div class="act-icon">🔤</div>
+        <div class="act-text">
+          <div class="act-title">Build a Word</div>
+          <div class="act-desc">Drag and drop letters</div>
+        </div>
+      </div>
+      <div class="activity-card draw" onclick="alert('Draw & Tell coming in Phase 2! 🌟')">
+        <div class="act-icon">📖</div>
+        <div class="act-text">
+          <div class="act-title">Draw & Tell</div>
+          <div class="act-desc">Draw a story, then tell it</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIBBLE CANVAS -->
+<div id="scribble" class="screen">
+  <div class="canvas-header">
+    <button class="back-btn" onclick="go('child-home')">←</button>
+    <div class="canvas-title">🎨 Free Scribble</div>
+    <div style="font-size:.85rem;font-weight:700;color:var(--ink3)" id="strokeCount">0 marks made</div>
+  </div>
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="drawCanvas"></canvas>
+    <div class="size-panel">
+      <button class="size-btn active" onclick="setSize(6,this)">S</button>
+      <button class="size-btn" onclick="setSize(14,this)">M</button>
+      <button class="size-btn" onclick="setSize(26,this)">L</button>
+      <button class="size-btn" onclick="setSize(44,this)">XL</button>
+    </div>
+    <div class="tools-panel">
+      <button class="tool-btn active" id="drawTool" onclick="setTool('draw',this)" title="Draw">✏️</button>
+      <button class="tool-btn" id="eraseTool" onclick="setTool('erase',this)" title="Erase">🧹</button>
+      <button class="tool-btn" onclick="clearCanvas()" title="Clear all">🗑️</button>
+      <button class="tool-btn" onclick="celebrateScribble()" title="Done!">⭐</button>
+    </div>
+    <div class="color-panel">
+      <div class="color-dot active" style="background:#E24B4A" onclick="setColor('#E24B4A',this)"></div>
+      <div class="color-dot" style="background:#F5A623" onclick="setColor('#F5A623',this)"></div>
+      <div class="color-dot" style="background:#F5C842" onclick="setColor('#F5C842',this)"></div>
+      <div class="color-dot" style="background:#7CC494" onclick="setColor('#7CC494',this)"></div>
+      <div class="color-dot" style="background:#6AAAEE" onclick="setColor('#6AAAEE',this)"></div>
+      <div class="color-dot" style="background:#9B87F0" onclick="setColor('#9B87F0',this)"></div>
+      <div class="color-dot" style="background:#D4537E" onclick="setColor('#D4537E',this)"></div>
+      <div class="color-dot" style="background:#2D2320" onclick="setColor('#2D2320',this)"></div>
+    </div>
+    <div class="celebrate-msg" id="celebrateMsg">
+      <div class="celebrate-emoji">🌟</div>
+      <div class="celebrate-text">Amazing work!</div>
+      <div class="celebrate-sub">You made <span id="celebrateStrokes">lots of</span> marks today</div>
+      <button class="celebrate-close" onclick="document.getElementById('celebrateMsg').style.display='none'">Keep going 🎨</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACING -->
+<div id="tracing" class="screen">
+  <div class="trace-header">
+    <button class="back-btn" onclick="go('child-home')">←</button>
+    <div class="canvas-title" style="color:var(--ink)">✏️ Trace Letters</div>
+    <button class="sound-btn" onclick="playLetterSound()" title="Hear the sound">🔊</button>
+  </div>
+  <div class="letter-picker" id="letterPicker"></div>
+  <div class="trace-area">
+    <div class="trace-instructions">
+      <div class="trace-instr-text" id="traceInstr">Follow the dotted lines with your finger or mouse ✨</div>
+    </div>
+    <div class="trace-canvas-wrap">
+      <canvas id="traceCanvas" width="360" height="280"></canvas>
+    </div>
+    <div class="trace-actions">
+      <button class="trace-action-btn ta-clear" onclick="clearTrace()">Try again 🔄</button>
+      <button class="trace-action-btn ta-next" onclick="nextLetter()">Next letter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARENT DASHBOARD -->
+<div id="dashboard" class="screen">
+  <div class="dash-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="dash-title">Parent Dashboard</div>
+        <div class="dash-sub" id="dashChildName">Temi's progress</div>
+      </div>
+      <button onclick="go('child-home')" style="background:rgba(255,255,255,0.2);border:none;border-radius:50px;padding:.4rem 1rem;font-size:.85rem;font-weight:700;color:white;cursor:pointer;font-family:'Nunito',sans-serif">← Child view</button>
+    </div>
+  </div>
+  <div style="display:flex;overflow-x:auto;background:white;border-bottom:2px solid #EDE8E4">
+    <button class="nav-tab active" onclick="switchDashTab(this,'tab-overview')">Overview</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-progress')">Progress</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-activity')">Activity Log</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-settings')">Controls</button>
+    <button class="nav-tab" onclick="switchDashTab(this,'tab-tips')">Tips</button>
+  </div>
+  <div class="dash-body">
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <div class="dash-section">
+        <div class="dash-section-title">📊 This week</div>
+        <div class="metrics-row">
+          <div class="metric-card"><div class="metric-num">7</div><div class="metric-label">Sessions</div></div>
+          <div class="metric-card"><div class="metric-num">43m</div><div class="metric-label">Total time</div></div>
+          <div class="metric-card" style="background:var(--sage)"><div class="metric-num" style="color:var(--sage3)">🌟 4</div><div class="metric-label">Stars earned</div></div>
+        </div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-section-title">🗓️ Today's suggestion</div>
+        <div class="tip-card">
+          <div class="tip-icon">✨</div>
+          <div class="tip-text">Try the Tracing module today — Temi has been doing well with circles. Next step: letter O tracing with large brush.</div>
+        </div>
+      </div>
+    </div>
+    <!-- PROGRESS TAB -->
+    <div id="tab-progress" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">📈 Development stages</div>
+        <div class="progress-bars">
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">🎨 Free scribbling</span><span class="prog-pct">85%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:85%;background:linear-gradient(90deg,#FFBB99,#F5A623)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">📏 Controlled strokes</span><span class="prog-pct">60%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:60%;background:linear-gradient(90deg,#B8D4F8,#6AAAEE)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">🔤 Letter tracing</span><span class="prog-pct">35%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:35%;background:linear-gradient(90deg,#CEC4F8,#9B87F0)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">📖 Picture-to-word</span><span class="prog-pct">10%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:10%;background:linear-gradient(90deg,#B8DFC4,#7CC494)"></div></div>
+          </div>
+          <div class="prog-item">
+            <div class="prog-top"><span class="prog-name">💬 Word building</span><span class="prog-pct">5%</span></div>
+            <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:5%;background:linear-gradient(90deg,#F4C0D1,#D4537E)"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-section-title">🏅 Letters worked on</div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <span style="padding:.4rem .9rem;background:var(--sky);color:var(--sky3);border-radius:50px;font-weight:800;font-size:.9rem">A</span>
+          <span style="padding:.4rem .9rem;background:var(--sky);color:var(--sky3);border-radius:50px;font-weight:800;font-size:.9rem">B</span>
+          <span style="padding:.4rem .9rem;background:var(--sage);color:var(--sage3);border-radius:50px;font-weight:800;font-size:.9rem">C</span>
+          <span style="padding:.4rem .9rem;background:var(--sky);color:var(--sky3);border-radius:50px;font-weight:800;font-size:.9rem">D</span>
+          <span style="padding:.4rem .9rem;background:var(--sky);color:var(--sky3);border-radius:50px;font-weight:800;font-size:.9rem">E</span>
+          <span style="padding:.4rem .9rem;background:var(--lavender);color:var(--lavender3);border-radius:50px;font-weight:800;font-size:.9rem">O</span>
+          <span style="padding:.4rem .9rem;background:var(--peach);color:#D85A30;border-radius:50px;font-weight:800;font-size:.9rem">S</span>
+          <span style="padding:.4rem .9rem;background:#F0EDE8;color:var(--ink3);border-radius:50px;font-weight:700;font-size:.9rem">+ 19 to go</span>
+        </div>
+      </div>
+    </div>
+    <!-- ACTIVITY LOG -->
+    <div id="tab-activity" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">📋 Recent sessions</div>
+        <div class="activity-list">
+          <div class="act-log"><div class="act-log-icon">🎨</div><div class="act-log-text"><div class="act-log-name">Free Scribble</div><div class="act-log-time">Today · 8 min</div></div><span class="act-log-badge badge-great">Great session</span></div>
+          <div class="act-log"><div class="act-log-icon">✏️</div><div class="act-log-text"><div class="act-log-name">Traced letter A, B</div><div class="act-log-time">Yesterday · 6 min</div></div><span class="act-log-badge badge-good">Good effort</span></div>
+          <div class="act-log"><div class="act-log-icon">🎨</div><div class="act-log-text"><div class="act-log-name">Free Scribble</div><div class="act-log-time">2 days ago · 11 min</div></div><span class="act-log-badge badge-great">Great session</span></div>
+          <div class="act-log"><div class="act-log-icon">✏️</div><div class="act-log-text"><div class="act-log-name">Traced letters O, C</div><div class="act-log-time">3 days ago · 7 min</div></div><span class="act-log-badge badge-good">Good effort</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- SETTINGS / CONTROLS -->
+    <div id="tab-settings" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">🔒 Safety controls</div>
+        <div class="settings-list">
+          <div class="setting-row"><span class="setting-name">No open internet</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">Ad-free mode</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">Focus mode (hide menu)</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">Sound effects</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">Session time limit (15 min)</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">Left-handed canvas</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          <div class="setting-row"><span class="setting-name">High contrast mode</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+      <div class="dash-section">
+        <div class="dash-section-title">📝 Custom tracing words</div>
+        <div style="font-size:.9rem;color:var(--ink2);font-weight:600;margin-bottom:.75rem">Add words for Temi to trace — family names, favorite objects</div>
+        <div style="display:flex;gap:.5rem">
+          <input class="field-input" placeholder="e.g. Mama, Dog, Home..." style="flex:1;padding:.65rem 1rem;font-size:.9rem" id="customWord" />
+          <button onclick="addWord()" style="padding:.65rem 1.2rem;background:var(--lavender3);color:white;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:'Nunito',sans-serif">Add</button>
+        </div>
+        <div style="margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem" id="customWordList">
+          <span style="padding:.35rem .9rem;background:var(--lavender);color:var(--lavender3);border-radius:50px;font-weight:700;font-size:.85rem">Temi</span>
+          <span style="padding:.35rem .9rem;background:var(--lavender);color:var(--lavender3);border-radius:50px;font-weight:700;font-size:.85rem">Mama</span>
+          <span style="padding:.35rem .9rem;background:var(--lavender);color:var(--lavender3);border-radius:50px;font-weight:700;font-size:.85rem">Dog</span>
+        </div>
+      </div>
+    </div>
+    <!-- TIPS -->
+    <div id="tab-tips" style="display:none">
+      <div class="dash-section">
+        <div class="dash-section-title">💡 Offline reinforcement tips</div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div class="tip-card"><div class="tip-icon">🖊️</div><div class="tip-text">Give large crayons and big paper. Encourage scribbling without correction — every mark is a word.</div></div>
+          <div class="tip-card" style="background:linear-gradient(135deg,var(--sky),var(--sky2))"><div class="tip-icon">🔊</div><div class="tip-text">Say the letter sound while your child traces it. "Ssss like snake" is more memorable than the letter name alone.</div></div>
+          <div class="tip-card" style="background:linear-gradient(135deg,var(--sage),var(--sage2))"><div class="tip-icon">📸</div><div class="tip-text">Photograph your child's scribbles and ask "tell me about this." Their explanation is expressive language — celebrate it.</div></div>
+          <div class="tip-card"><div class="tip-icon">🌿</div><div class="tip-text">Short sessions (5–8 minutes) are more effective than long ones. Stop before your child wants to — leave them wanting more.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- State ---
+let state = {childName:'Temi', parentName:'', selectedAge:'', goals:[]};
+let drawCtx, traceCtx, isDrawing=false, drawColor='#E24B4A', drawSize=6, drawTool='draw';
+let strokeCount=0, currentLetterIdx=0;
+let traceDrawing=false;
+const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// --- Navigation ---
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='scribble') initCanvas();
+  if(id==='tracing') initTracing();
+  if(id==='child-home'){
+    document.getElementById('childNameDisplay').textContent='Hello, '+(state.childName||'there')+' 👋';
+  }
+  if(id==='dashboard'){
+    document.getElementById('dashChildName').textContent=(state.childName||'Your child')+"'s progress";
+  }
+  window.scrollTo(0,0);
+}
+
+// --- Onboarding ---
+function selAge(el,age){
+  document.querySelectorAll('.age-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  state.selectedAge=age;
+}
+function toggleGoal(el){el.classList.toggle('sel')}
+function finishOnboard(){
+  const n=document.getElementById('childName').value.trim();
+  const p=document.getElementById('parentName').value.trim();
+  if(n) state.childName=n;
+  if(p) state.parentName=p;
+  go('child-home');
+}
+
+// --- Scribble Canvas ---
+function initCanvas(){
+  const wrap=document.getElementById('canvasWrap');
+  const c=document.getElementById('drawCanvas');
+  c.width=wrap.clientWidth||window.innerWidth;
+  c.height=wrap.clientHeight||window.innerHeight-80;
+  drawCtx=c.getContext('2d');
+  drawCtx.fillStyle='#FEFCFA';
+  drawCtx.fillRect(0,0,c.width,c.height);
+  addCanvasEvents(c);
+}
+function addCanvasEvents(c){
+  c.onmousedown=e=>{isDrawing=true;startStroke(c,e.offsetX,e.offsetY)};
+  c.onmousemove=e=>{if(isDrawing)drawStroke(e.offsetX,e.offsetY)};
+  c.onmouseup=c.onmouseleave=()=>endStroke();
+  c.ontouchstart=e=>{e.preventDefault();isDrawing=true;const t=e.touches[0],r=c.getBoundingClientRect();startStroke(c,t.clientX-r.left,t.clientY-r.top)};
+  c.ontouchmove=e=>{e.preventDefault();if(!isDrawing)return;const t=e.touches[0],r=c.getBoundingClientRect();drawStroke(t.clientX-r.left,t.clientY-r.top)};
+  c.ontouchend=()=>endStroke();
+}
+function startStroke(c,x,y){
+  drawCtx.beginPath();drawCtx.moveTo(x,y);
+}
+function drawStroke(x,y){
+  if(drawTool==='erase'){
+    drawCtx.globalCompositeOperation='destination-out';
+    drawCtx.beginPath();drawCtx.arc(x,y,drawSize*2,0,Math.PI*2);drawCtx.fill();
+    drawCtx.globalCompositeOperation='source-over';
+  } else {
+    drawCtx.lineTo(x,y);
+    drawCtx.strokeStyle=drawColor;
+    drawCtx.lineWidth=drawSize;
+    drawCtx.lineCap='round';drawCtx.lineJoin='round';
+    drawCtx.stroke();
+  }
+}
+function endStroke(){
+  if(isDrawing){isDrawing=false;strokeCount++;document.getElementById('strokeCount').textContent=strokeCount+' mark'+(strokeCount===1?'':'s')+' made';}
+}
+function setColor(c,el){
+  drawColor=c;setTool('draw',document.getElementById('drawTool'));
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active'));el.classList.add('active');
+}
+function setSize(s,el){
+  drawSize=s;
+  document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');
+}
+function setTool(t,el){
+  drawTool=t;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');
+}
+function clearCanvas(){
+  if(drawCtx){drawCtx.fillStyle='#FEFCFA';drawCtx.fillRect(0,0,drawCtx.canvas.width,drawCtx.canvas.height);}
+  strokeCount=0;document.getElementById('strokeCount').textContent='0 marks made';
+}
+function celebrateScribble(){
+  const msg=document.getElementById('celebrateMsg');
+  document.getElementById('celebrateStrokes').textContent=strokeCount||'some';
+  msg.style.display='block';
+}
+
+// --- Tracing ---
+function initTracing(){
+  const picker=document.getElementById('letterPicker');
+  picker.innerHTML='';
+  letters.forEach((l,i)=>{
+    const chip=document.createElement('div');
+    chip.className='letter-chip'+(i===0?' active':'');
+    chip.textContent=l;
+    chip.onclick=()=>{currentLetterIdx=i;selectLetter(i);document.querySelectorAll('.letter-chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active')};
+    picker.appendChild(chip);
+  });
+  currentLetterIdx=0;
+  drawTraceLetter();
+  setupTraceCanvas();
+}
+function selectLetter(i){currentLetterIdx=i;drawTraceLetter();clearTrace();}
+function nextLetter(){
+  currentLetterIdx=(currentLetterIdx+1)%letters.length;
+  document.querySelectorAll('.letter-chip').forEach((c,i)=>c.classList.toggle('active',i===currentLetterIdx));
+  const picker=document.getElementById('letterPicker');
+  const chips=[...picker.children];
+  if(chips[currentLetterIdx]) chips[currentLetterIdx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  drawTraceLetter();clearTrace();
+}
+function drawTraceLetter(){
+  const c=document.getElementById('traceCanvas');
+  const ctx=c.getContext('2d');
+  const letter=letters[currentLetterIdx];
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle='#F8F9FA';ctx.fillRect(0,0,c.width,c.height);
+  ctx.font='bold 180px Fredoka One, cursive';
+  ctx.fillStyle='rgba(200,195,230,0.4)';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(letter,c.width/2,c.height/2);
+  // Dotted guide
+  ctx.setLineDash([8,8]);ctx.strokeStyle='rgba(155,135,240,0.35)';ctx.lineWidth=3;
+  ctx.font='bold 180px Fredoka One, cursive';
+  ctx.strokeText(letter,c.width/2,c.height/2);
+  ctx.setLineDash([]);
+  document.getElementById('traceInstr').textContent='Trace the letter '+letter+' — follow the shape ✨';
+}
+function setupTraceCanvas(){
+  const c=document.getElementById('traceCanvas');
+  let drawing=false;
+  const ctx=c.getContext('2d');
+  function getPos(e){
+    const r=c.getBoundingClientRect();
+    const scaleX=c.width/r.width, scaleY=c.height/r.height;
+    if(e.touches) return {x:(e.touches[0].clientX-r.left)*scaleX,y:(e.touches[0].clientY-r.top)*scaleY};
+    return {x:(e.clientX-r.left)*scaleX,y:(e.clientY-r.top)*scaleY};
+  }
+  c.onmousedown=e=>{drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};
+  c.onmousemove=e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#9B87F0';ctx.lineWidth=8;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke()};
+  c.onmouseup=c.onmouseleave=()=>{drawing=false};
+  c.ontouchstart=e=>{e.preventDefault();drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};
+  c.ontouchmove=e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#9B87F0';ctx.lineWidth=8;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke()};
+  c.ontouchend=()=>{drawing=false};
+}
+function clearTrace(){
+  drawTraceLetter();setupTraceCanvas();
+}
+function playLetterSound(){
+  const l=letters[currentLetterIdx];
+  if('speechSynthesis' in window){
+    const u=new SpeechSynthesisUtterance(l+' says '+l.toLowerCase());
+    u.rate=0.8;u.pitch=1.1;window.speechSynthesis.speak(u);
+  }
+}
+
+// --- Dashboard ---
+function switchDashTab(btn, tabId){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['tab-overview','tab-progress','tab-activity','tab-settings','tab-tips'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=(id===tabId)?'block':'none';
+  });
+}
+function addWord(){
+  const input=document.getElementById('customWord');
+  const w=input.value.trim();
+  if(!w)return;
+  const list=document.getElementById('customWordList');
+  const span=document.createElement('span');
+  span.style.cssText='padding:.35rem .9rem;background:var(--lavender);color:var(--lavender3);border-radius:50px;font-weight:700;font-size:.85rem';
+  span.textContent=w;
+  list.appendChild(span);
+  input.value='';
+}
+
+// Handle resize
+window.addEventListener('resize',()=>{
+  if(document.getElementById('scribble').classList.contains('active')) initCanvas();
+});
+</script>
+</body>
+</html>

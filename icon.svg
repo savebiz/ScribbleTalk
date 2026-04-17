@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="120" fill="#9B87F0"/>
+  <!-- Pencil graphic -->
+  <!-- Body -->
+  <path d="M160 360 L320 200 L360 240 L200 400 Z" fill="#FFF8F4"/>
+  <path d="M320 200 L360 160 C380 140 420 180 400 200 L360 240 Z" fill="#F5C842"/>
+  <path d="M160 360 L120 420 L180 380 Z" fill="#FFBB99"/>
+  <!-- Lead -->
+  <path d="M120 420 L135 405 L145 415 Z" fill="#2D2320"/>
+  <!-- Squiggles -->
+  <path d="M110 440 Q 180 500, 260 440 T 400 440" fill="none" stroke="#FFF8F4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M160 100 Q 240 40, 320 100 T 460 80" fill="none" stroke="#7CC494" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
