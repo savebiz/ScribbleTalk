@@ -138,16 +138,17 @@ function initTracing(context = 'letters') {
   sessionStartTime = Date.now();
   drawTraceLetter();
   setupTraceCanvas();
+  setTimeout(() => playLetterSound(), 300);
 }
 
-function selectLetter(i) { currentLetterIdx = i; drawTraceLetter(); setupTraceCanvas(); }
+function selectLetter(i) { currentLetterIdx = i; drawTraceLetter(); setupTraceCanvas(); playLetterSound(); }
 function nextLetter() {
   currentLetterIdx = (currentLetterIdx + 1) % letters.length;
   document.querySelectorAll('.letter-chip').forEach((c, i) => c.classList.toggle('active', i === currentLetterIdx));
   const picker = document.getElementById('letterPicker');
   const chips = [...picker.children];
   if (chips[currentLetterIdx]) chips[currentLetterIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  drawTraceLetter(); setupTraceCanvas();
+  drawTraceLetter(); setupTraceCanvas(); playLetterSound();
 }
 
 function drawTraceLetter() {
@@ -322,6 +323,7 @@ function clearTrace() {
   if (gradeTimeout) clearTimeout(gradeTimeout);
   drawTraceLetter(); 
   setupTraceCanvas();
+  playLetterSound();
 }
 
 function playLetterSound() {
