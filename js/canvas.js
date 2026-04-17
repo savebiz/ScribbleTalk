@@ -330,11 +330,15 @@ function playLetterSound() {
   const l = letters[currentLetterIdx];
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel(); // Clear any queued or stuck sounds
-    const isNum = /[0-9]/.test(l);
-    const words = {A:"Apple",B:"Ball",C:"Cat",D:"Dog",E:"Elephant",F:"Fish",G:"Goat",H:"Hat",I:"Igloo",J:"Jump",K:"Kite",L:"Lion",M:"Monkey",N:"Nest",O:"Orange",P:"Pig",Q:"Queen",R:"Rabbit",S:"Sun",T:"Tiger",U:"Umbrella",V:"Van",W:"Water",X:"X-ray",Y:"Yellow",Z:"Zebra"};
-    const speechText = isNum ? `The number ${l}.` : `${l} for ${words[l] || l}.`;
-    const u = new SpeechSynthesisUtterance(speechText);
-    u.rate = 0.85; u.pitch = 1.1; 
-    window.speechSynthesis.speak(u);
+    
+    // Brief delay prevents Safari TTS from dropping the new sound immediately after a cancel
+    setTimeout(() => {
+      const isNum = /[0-9]/.test(l);
+      const words = {A:"Apple",B:"Ball",C:"Cat",D:"Dog",E:"Elephant",F:"Fish",G:"Goat",H:"Hat",I:"Igloo",J:"Jump",K:"Kite",L:"Lion",M:"Monkey",N:"Nest",O:"Orange",P:"Pig",Q:"Queen",R:"Rabbit",S:"Sun",T:"Tiger",U:"Umbrella",V:"Van",W:"Water",X:"X-ray",Y:"Yellow",Z:"Zebra"};
+      const speechText = isNum ? `The number ${l}.` : `${l} for ${words[l] || l}.`;
+      const u = new SpeechSynthesisUtterance(speechText);
+      u.rate = 0.85; u.pitch = 1.1; 
+      window.speechSynthesis.speak(u);
+    }, 50);
   }
 }
